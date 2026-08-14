@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一条beta鱼 - 个人主页</title>
+    <!-- 引入 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局重置与基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa; /* 极浅灰色背景 */
+            color: #333333; /* 深灰色文字 */
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #4A90D9;
+        }
+
+        .nav-menu li a {
+            color: #555;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+
+        .nav-menu li a:hover, .nav-menu li a.active {
+            color: #4A90D9;
+            background-color: #f0f7ff;
+        }
+
+        /* 主要内容区域 */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .profile-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 头像样式 */
+        .avatar-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #f0f7ff;
+            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.2);
+        }
+
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 昵称与简介 */
+        .nickname {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        /* 关于我模块 */
+        .about-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+            border-left: 4px solid #4A90D9;
+        }
+
+        .about-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #4A90D9;
+        }
+
+        .about-text {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* 社交图标区域 */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #f0f7ff;
+            color: #4A90D9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .social-btn:hover {
+            background-color: #4A90D9;
+            color: #ffffff;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(74, 144, 217, 0.3);
+        }
+
+        /* 邮箱提示框 */
+        .email-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 10;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .email-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .social-btn-wrapper {
+            position: relative;
+        }
+
+        .social-btn-wrapper.show-tooltip .email-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+            border-top: 1px solid #eee;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 600px) {
+            .profile-card {
+                padding: 30px 20px;
+            }
+            
+            .nickname {
+                font-size: 1.5rem;
+            }
+            
+            .nav-container {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">YT_betafish</div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active">首页</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main>
+        <div class="profile-card">
+            <!-- 个人头像 -->
+            <div class="avatar-container">
+                <img src="https://i1.hdslb.com/bfs/face/93bf642a31cfc59c6b53fdf9a37b9ff1c202713a.jpg" alt="一条beta鱼的头像">
+            </div>
+
+            <!-- 昵称 -->
+            <h1 class="nickname">一条beta鱼</h1>
+
+            <!-- 一句话简介 -->
+            <p class="tagline">嗨,这里是有趣的YT_betafish频道!一起玩耍吧~</p>
+
+            <!-- 关于我 -->
+            <div class="about-section">
+                <h3>关于我</h3>
+                <p class="about-text">我不知道在这里写什么了，但是去看看我B站收藏夹，有惊喜</p>
+            </div>
+
+            <!-- 社交图标 -->
+            <div class="social-links">
+                <!-- Github -->
+                <a href="https://github.com/renjuenzhe" target="_blank" class="social-btn" title="Github">
+                    <i class="fab fa-github"></i>
+                </a>
+
+                <!-- Bilibili -->
+                <a href="https://space.bilibili.com/1708979512" target="_blank" class="social-btn" title="Bilibili">
+                    <i class="fab fa-bilibili"></i>
+                </a>
+
+                <!-- Email (点击显示邮箱) -->
+                <div class="social-btn-wrapper" id="emailWrapper">
+                    <div class="social-btn" id="emailBtn" title="Email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="email-tooltip" id="emailTooltip">3671317968@qq.com</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>&copy; 2026 YT_betafish. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailWrapper = document.getElementById('emailWrapper');
+            const emailBtn = document.getElementById('emailBtn');
+            
+            // 点击邮箱按钮显示/隐藏提示框
+            emailBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止冒泡
+                emailWrapper.classList.toggle('show-tooltip');
+            });
+
+            // 点击页面其他地方关闭提示框
+            document.addEventListener('click', function(e) {
+                if (!emailWrapper.contains(e.target)) {
+                    emailWrapper.classList.remove('show-tooltip');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
