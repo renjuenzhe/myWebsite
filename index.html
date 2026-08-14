@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -13,6 +12,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         body {
@@ -60,6 +60,12 @@
             color: #4A90D9;
         }
 
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .nav-menu li a {
             color: #555;
             font-weight: 500;
@@ -70,6 +76,93 @@
         .nav-menu li a:hover, .nav-menu li a.active {
             color: #4A90D9;
             background-color: #f0f7ff;
+        }
+
+        /* 深色模式切换按钮样式 */
+        .dark-mode-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #f0f7ff;
+            color: #4A90D9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-btn:hover {
+            background-color: #4A90D9;
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        /* 深色模式全局样式 */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode header {
+            background-color: #1e1e1e;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode .profile-card {
+            background-color: #1e1e1e;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.08);
+        }
+
+        body.dark-mode .about-section {
+            background-color: #2d2d2d;
+            border-left-color: #4A90D9;
+        }
+
+        body.dark-mode footer {
+            background-color: #1e1e1e;
+            border-top-color: #2d2d2d;
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .nav-menu li a {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .nav-menu li a:hover, body.dark-mode .nav-menu li a.active {
+            color: #4A90D9;
+            background-color: rgba(74, 144, 217, 0.1);
+        }
+
+        body.dark-mode .nickname {
+            color: #ffffff;
+        }
+
+        body.dark-mode .tagline, body.dark-mode .about-text {
+            color: #cccccc;
+        }
+
+        body.dark-mode .social-btn {
+            background-color: #2d2d2d;
+            color: #4A90D9;
+        }
+
+        body.dark-mode .social-btn:hover {
+            background-color: #4A90D9;
+            color: #ffffff;
+        }
+
+        /* 修改深色模式下按钮的配色，移除原黄色，替换为主题蓝色 */
+        body.dark-mode .dark-mode-btn {
+            background-color: rgba(74, 144, 217, 0.2);
+            color: #4A90D9;
+        }
+
+        body.dark-mode .dark-mode-btn:hover {
+            background-color: #4A90D9;
+            color: #ffffff;
         }
 
         /* 主要内容区域 */
@@ -254,6 +347,12 @@
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#" class="active">首页</a></li>
+                    <!-- 新增深色模式切换按钮 -->
+                    <li>
+                        <button class="dark-mode-btn" id="darkModeBtn" title="切换深色模式">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -291,7 +390,7 @@
                     <i class="fab fa-bilibili"></i>
                 </a>
 
-                <!-- Email (点击显示邮箱) -->
+                <!-- Email (点击显示邮箱+自动复制邮箱) -->
                 <div class="social-btn-wrapper" id="emailWrapper">
                     <div class="social-btn" id="emailBtn" title="Email">
                         <i class="fas fa-envelope"></i>
@@ -311,17 +410,64 @@
         document.addEventListener('DOMContentLoaded', function() {
             const emailWrapper = document.getElementById('emailWrapper');
             const emailBtn = document.getElementById('emailBtn');
+            const emailTooltip = document.getElementById('emailTooltip');
+            const darkModeBtn = document.getElementById('darkModeBtn');
+            const darkIcon = darkModeBtn.querySelector('i');
             
-            // 点击邮箱按钮显示/隐藏提示框
-            emailBtn.addEventListener('click', function(e) {
+            // 点击邮箱按钮显示/隐藏提示框，同时复制邮箱到剪贴板
+            emailBtn.addEventListener('click', async function(e) {
                 e.stopPropagation(); // 防止冒泡
                 emailWrapper.classList.toggle('show-tooltip');
+                // 新增的复制邮箱逻辑
+                const emailText = emailTooltip.textContent;
+                try {
+                    await navigator.clipboard.writeText(emailText);
+                    // 复制成功后修改提示文字，2秒后恢复原邮箱文本
+                    emailTooltip.textContent = "邮箱已复制！";
+                    setTimeout(() => {
+                        emailTooltip.textContent = emailText;
+                    }, 2000);
+                } catch (err) {
+                    // 低版本浏览器兼容降级方案
+                    const tempInput = document.createElement('input');
+                    tempInput.value = emailText;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    emailTooltip.textContent = "邮箱已复制！";
+                    setTimeout(() => {
+                        emailTooltip.textContent = emailText;
+                    }, 2000);
+                }
             });
 
             // 点击页面其他地方关闭提示框
             document.addEventListener('click', function(e) {
                 if (!emailWrapper.contains(e.target)) {
                     emailWrapper.classList.remove('show-tooltip');
+                }
+            });
+
+            // 深色模式切换逻辑
+            // 读取本地存储的深色模式偏好
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                darkIcon.classList.remove('fa-moon');
+                darkIcon.classList.add('fa-sun');
+            }
+
+            darkModeBtn.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+                // 切换图标
+                if (isDark) {
+                    darkIcon.classList.remove('fa-moon');
+                    darkIcon.classList.add('fa-sun');
+                } else {
+                    darkIcon.classList.remove('fa-sun');
+                    darkIcon.classList.add('fa-moon');
                 }
             });
         });
