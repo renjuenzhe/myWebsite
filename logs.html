@@ -415,18 +415,41 @@
             }
 
             .nav-menu li a {
-                padding: 8px 10px;
-                font-size: 0.9rem;
+                padding: 6px 8px;
+                font-size: 0.85rem;
             }
 
             .nav-menu {
-                gap: 8px;
+                gap: 5px;
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            .dark-mode-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
             }
         }
 
     </style>
 </head>
 <body>
+    <!-- 提前应用深色模式，避免刷新时闪烁（FOUC） -->
+    <script>
+        (function() {
+            let darkModePref = localStorage.getItem('darkMode');
+            if (darkModePref === null) {
+                darkModePref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'enabled' : 'disabled';
+                localStorage.setItem('darkMode', darkModePref);
+            }
+            if (darkModePref === 'enabled') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
 
     <!-- 顶部导航栏 -->
     <header>
@@ -436,7 +459,7 @@
                 <ul class="nav-menu">
                     <li><a href="index.html">首页</a></li>
                     <li><a href="logs.html" class="active">日志</a></li>
-                    <!-- 新增深色模式切换按钮 -->
+                    <li><a href="works.html">作品</a></li>
                     <li>
                         <button class="dark-mode-btn" id="darkModeBtn" title="切换深色模式">
                             <i class="fas fa-moon"></i>
@@ -523,15 +546,8 @@
             const darkIcon = darkModeBtn.querySelector('i');
 
             // 深色模式切换逻辑
-            // 读取本地存储的深色模式偏好
-            // 首次访问（无存储）时，跟随浏览器/系统深色模式设置
-            let darkModePref = localStorage.getItem('darkMode');
-            if (darkModePref === null) {
-                darkModePref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'enabled' : 'disabled';
-                localStorage.setItem('darkMode', darkModePref);
-            }
-            if (darkModePref === 'enabled') {
-                document.body.classList.add('dark-mode');
+            // 根据已应用的深色模式状态同步图标
+            if (document.body.classList.contains('dark-mode')) {
                 darkIcon.classList.remove('fa-moon');
                 darkIcon.classList.add('fa-sun');
             }
