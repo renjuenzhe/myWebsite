@@ -96,58 +96,58 @@
         }
 
         /* 深色模式全局样式 */
-        body.dark-mode {
+        html.dark-mode, html.dark-mode body {
             background-color: #121212;
             color: #e0e0e0;
         }
 
-        body.dark-mode header {
+        html.dark-mode header {
             background-color: #1e1e1e;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        body.dark-mode .nav-menu li a {
+        html.dark-mode .nav-menu li a {
             color: #e0e0e0;
         }
 
-        body.dark-mode .nav-menu li a:hover {
+        html.dark-mode .nav-menu li a:hover {
             color: #4A90D9;
             background-color: rgba(74, 144, 217, 0.1);
         }
 
-        body.dark-mode .dark-mode-btn {
+        html.dark-mode .dark-mode-btn {
             background-color: rgba(74, 144, 217, 0.2);
             color: #4A90D9;
         }
 
-        body.dark-mode .dark-mode-btn:hover {
+        html.dark-mode .dark-mode-btn:hover {
             background-color: #4A90D9;
             color: #ffffff;
         }
 
-        body.dark-mode .error-card {
+        html.dark-mode .error-card {
             background-color: #1e1e1e;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
-        body.dark-mode .error-code {
+        html.dark-mode .error-code {
             color: #4A90D9;
         }
 
-        body.dark-mode .error-message {
+        html.dark-mode .error-message {
             color: #e0e0e0;
         }
 
-        body.dark-mode .error-description {
+        html.dark-mode .error-description {
             color: #999;
         }
 
-        body.dark-mode .back-btn {
+        html.dark-mode .back-btn {
             background-color: #4A90D9;
             color: #ffffff;
         }
 
-        body.dark-mode .back-btn:hover {
+        html.dark-mode .back-btn:hover {
             background-color: #357ABD;
         }
 
@@ -235,7 +235,7 @@
             font-weight: 600;
         }
 
-        body.dark-mode .countdown-text {
+        html.dark-mode .countdown-text {
             color: #777;
         }
 
@@ -258,7 +258,7 @@
             color: #777;
         }
 
-        body.dark-mode footer {
+        html.dark-mode footer {
             background-color: #1e1e1e;
             border-top: 1px solid #333;
             color: #999;
@@ -326,8 +326,6 @@
             }
         }
     </style>
-</head>
-<body>
     <!-- 提前应用深色模式，避免刷新时闪烁（FOUC） -->
     <script>
         (function() {
@@ -337,11 +335,12 @@
                 localStorage.setItem('darkMode', darkModePref);
             }
             if (darkModePref === 'enabled') {
-                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
             }
         })();
     </script>
-
+</head>
+<body>
     <!-- 顶部导航栏 -->
     <header>
         <div class="nav-container">
@@ -401,15 +400,15 @@
             const darkIcon = darkModeBtn.querySelector('i');
 
             // 根据已应用的深色模式状态同步图标
-            if (document.body.classList.contains('dark-mode')) {
+            if (document.documentElement.classList.contains('dark-mode')) {
                 darkIcon.classList.remove('fa-moon');
                 darkIcon.classList.add('fa-sun');
             }
 
             // 深色模式切换
             darkModeBtn.addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-                if (document.body.classList.contains('dark-mode')) {
+                document.documentElement.classList.toggle('dark-mode');
+                if (document.documentElement.classList.contains('dark-mode')) {
                     darkIcon.classList.remove('fa-moon');
                     darkIcon.classList.add('fa-sun');
                     localStorage.setItem('darkMode', 'enabled');

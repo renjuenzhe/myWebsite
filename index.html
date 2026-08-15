@@ -106,66 +106,66 @@
         }
 
         /* 深色模式全局样式 */
-        body.dark-mode {
+        html.dark-mode, html.dark-mode body {
             background-color: #121212;
             color: #e0e0e0;
         }
 
-        body.dark-mode header {
+        html.dark-mode header {
             background-color: #1e1e1e;
             box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
         }
 
-        body.dark-mode .profile-card {
+        html.dark-mode .profile-card {
             background-color: #1e1e1e;
             box-shadow: 0 10px 30px rgba(255, 255, 255, 0.08);
         }
 
-        body.dark-mode .about-section {
+        html.dark-mode .about-section {
             background-color: #2d2d2d;
             border-left-color: #4A90D9;
         }
 
-        body.dark-mode footer {
+        html.dark-mode footer {
             background-color: #1e1e1e;
             border-top-color: #2d2d2d;
             color: #a0a0a0;
         }
 
-        body.dark-mode .nav-menu li a {
+        html.dark-mode .nav-menu li a {
             color: #e0e0e0;
         }
 
-        body.dark-mode .nav-menu li a:hover, body.dark-mode .nav-menu li a.active {
+        html.dark-mode .nav-menu li a:hover, html.dark-mode .nav-menu li a.active {
             color: #4A90D9;
             background-color: rgba(74, 144, 217, 0.1);
         }
 
-        body.dark-mode .nickname {
+        html.dark-mode .nickname {
             color: #ffffff;
         }
 
-        body.dark-mode .tagline, body.dark-mode .about-text {
+        html.dark-mode .tagline, html.dark-mode .about-text {
             color: #cccccc;
         }
 
-        body.dark-mode .social-btn {
+        html.dark-mode .social-btn {
             background-color: #2d2d2d;
             color: #4A90D9;
         }
 
-        body.dark-mode .social-btn:hover {
+        html.dark-mode .social-btn:hover {
             background-color: #4A90D9;
             color: #ffffff;
         }
 
         /* 修改深色模式下按钮的配色，移除原黄色，替换为主题蓝色 */
-        body.dark-mode .dark-mode-btn {
+        html.dark-mode .dark-mode-btn {
             background-color: rgba(74, 144, 217, 0.2);
             color: #4A90D9;
         }
 
-        body.dark-mode .dark-mode-btn:hover {
+        html.dark-mode .dark-mode-btn:hover {
             background-color: #4A90D9;
             color: #ffffff;
         }
@@ -399,8 +399,6 @@
             }
         }
     </style>
-</head>
-<body>
     <!-- 提前应用深色模式，避免刷新时闪烁（FOUC） -->
     <script>
         (function() {
@@ -410,11 +408,12 @@
                 localStorage.setItem('darkMode', darkModePref);
             }
             if (darkModePref === 'enabled') {
-                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
             }
         })();
     </script>
-
+</head>
+<body>
     <!-- 顶部导航栏 -->
     <header>
         <div class="nav-container">
@@ -527,14 +526,14 @@
 
             // 深色模式切换逻辑
             // 根据已应用的深色模式状态同步图标
-            if (document.body.classList.contains('dark-mode')) {
+            if (document.documentElement.classList.contains('dark-mode')) {
                 darkIcon.classList.remove('fa-moon');
                 darkIcon.classList.add('fa-sun');
             }
 
             darkModeBtn.addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-                const isDark = document.body.classList.contains('dark-mode');
+                document.documentElement.classList.toggle('dark-mode');
+                const isDark = document.documentElement.classList.contains('dark-mode');
                 localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
                 // 切换图标
                 if (isDark) {

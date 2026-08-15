@@ -106,38 +106,38 @@
         }
 
         /* 深色模式全局样式 */
-        body.dark-mode {
+        html.dark-mode, html.dark-mode body {
             background-color: #121212;
             color: #e0e0e0;
         }
 
-        body.dark-mode header {
+        html.dark-mode header {
             background-color: #1e1e1e;
             box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
         }
 
-        body.dark-mode footer {
+        html.dark-mode footer {
             background-color: #1e1e1e;
             border-top-color: #2d2d2d;
             color: #a0a0a0;
         }
 
-        body.dark-mode .nav-menu li a {
+        html.dark-mode .nav-menu li a {
             color: #e0e0e0;
         }
 
-        body.dark-mode .nav-menu li a:hover, body.dark-mode .nav-menu li a.active {
+        html.dark-mode .nav-menu li a:hover, html.dark-mode .nav-menu li a.active {
             color: #4A90D9;
             background-color: rgba(74, 144, 217, 0.1);
         }
 
         /* 修改深色模式下按钮的配色，移除原黄色，替换为主题蓝色 */
-        body.dark-mode .dark-mode-btn {
+        html.dark-mode .dark-mode-btn {
             background-color: rgba(74, 144, 217, 0.2);
             color: #4A90D9;
         }
 
-        body.dark-mode .dark-mode-btn:hover {
+        html.dark-mode .dark-mode-btn:hover {
             background-color: #4A90D9;
             color: #ffffff;
         }
@@ -208,12 +208,12 @@
         }
 
         /* 深色模式适配 */
-        body.dark-mode .runtime-section {
+        html.dark-mode .runtime-section {
             background-color: #1e1e1e;
             box-shadow: 0 10px 30px rgba(255, 255, 255, 0.08);
         }
 
-        body.dark-mode .runtime-label {
+        html.dark-mode .runtime-label {
             color: #a0a0a0;
         }
 
@@ -249,19 +249,20 @@
             padding-left: 30px;
         }
 
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 8px;
-            top: 4px;
-            bottom: 4px;
-            width: 2px;
-            background-color: #e0e0e0;
-        }
-
         .timeline-item {
             position: relative;
             padding-bottom: 25px;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 18px;
+            bottom: 0;
+            width: 2px;
+            background-color: #e0e0e0;
+            z-index: 1;
         }
 
         .timeline-item:last-child {
@@ -280,6 +281,7 @@
             border: 3px solid #ffffff;
             box-shadow: 0 0 0 2px #4A90D9;
             transform: translateX(-50%);
+            z-index: 2;
         }
 
         .timeline-date {
@@ -295,20 +297,20 @@
         }
 
         /* 深色模式适配 */
-        body.dark-mode .timeline-section {
+        html.dark-mode .timeline-section {
             background-color: #1e1e1e;
             box-shadow: 0 10px 30px rgba(255, 255, 255, 0.08);
         }
 
-        body.dark-mode .timeline::before {
+        html.dark-mode .timeline-item:not(:last-child)::after {
             background-color: #2d2d2d;
         }
 
-        body.dark-mode .timeline-item::before {
+        html.dark-mode .timeline-item::before {
             border-color: #1e1e1e;
         }
 
-        body.dark-mode .timeline-content {
+        html.dark-mode .timeline-content {
             color: #e0e0e0;
         }
 
@@ -396,8 +398,9 @@
                 padding-left: 24px;
             }
 
-            .timeline::before {
-                left: 6px;
+            .timeline-item:not(:last-child)::after {
+                left: -19px;
+                top: 16px;
             }
 
             .timeline-item::before {
@@ -435,8 +438,6 @@
         }
 
     </style>
-</head>
-<body>
     <!-- 提前应用深色模式，避免刷新时闪烁（FOUC） -->
     <script>
         (function() {
@@ -446,11 +447,12 @@
                 localStorage.setItem('darkMode', darkModePref);
             }
             if (darkModePref === 'enabled') {
-                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
             }
         })();
     </script>
-
+</head>
+<body>
     <!-- 顶部导航栏 -->
     <header>
         <div class="nav-container">
@@ -506,7 +508,11 @@
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-date">2026/8/15</div>
-                    <div class="timeline-content">网站添加日志页面</div>
+                    <div class="timeline-content">添加日志页面、作品页面与 404 错误页，深色模式与浏览器设置同步</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">敬请期待</div>
+                    <div class="timeline-content">更多功能持续开发中…</div>
                 </div>
             </div>
         </section>
@@ -547,14 +553,14 @@
 
             // 深色模式切换逻辑
             // 根据已应用的深色模式状态同步图标
-            if (document.body.classList.contains('dark-mode')) {
+            if (document.documentElement.classList.contains('dark-mode')) {
                 darkIcon.classList.remove('fa-moon');
                 darkIcon.classList.add('fa-sun');
             }
 
             darkModeBtn.addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-                const isDark = document.body.classList.contains('dark-mode');
+                document.documentElement.classList.toggle('dark-mode');
+                const isDark = document.documentElement.classList.contains('dark-mode');
                 localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
                 // 切换图标
                 if (isDark) {
