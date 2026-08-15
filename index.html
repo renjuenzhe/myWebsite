@@ -15,6 +15,11 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* 强制保留滚动条空间，避免页面切换时按钮被滚动条挤位 */
+        html {
+            overflow-y: scroll;
+        }
+
         body {
             font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
             background-color: #f8f9fa; /* 极浅灰色背景 */
@@ -336,6 +341,53 @@
                 padding: 0 15px;
             }
         }
+
+        /* 极窄屏（360px以下，如 iPhone SE）适配 */
+        @media (max-width: 360px) {
+            .profile-card {
+                padding: 25px 15px;
+            }
+
+            .nickname {
+                font-size: 1.3rem;
+            }
+
+            .tagline {
+                font-size: 0.9rem;
+            }
+
+            .about-section {
+                padding: 15px;
+            }
+
+            .about-text {
+                font-size: 0.9rem;
+            }
+
+            .avatar-container {
+                width: 96px;
+                height: 96px;
+            }
+
+            .social-links {
+                gap: 15px;
+            }
+
+            .social-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .nav-menu li a {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+
+            .nav-menu {
+                gap: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -347,6 +399,7 @@
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#" class="active">首页</a></li>
+                    <li><a href="logs.html">日志</a></li>
                     <!-- 新增深色模式切换按钮 -->
                     <li>
                         <button class="dark-mode-btn" id="darkModeBtn" title="切换深色模式">
@@ -451,7 +504,13 @@
 
             // 深色模式切换逻辑
             // 读取本地存储的深色模式偏好
-            if (localStorage.getItem('darkMode') === 'enabled') {
+            // 首次访问（无存储）时，跟随浏览器/系统深色模式设置
+            let darkModePref = localStorage.getItem('darkMode');
+            if (darkModePref === null) {
+                darkModePref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'enabled' : 'disabled';
+                localStorage.setItem('darkMode', darkModePref);
+            }
+            if (darkModePref === 'enabled') {
                 document.body.classList.add('dark-mode');
                 darkIcon.classList.remove('fa-moon');
                 darkIcon.classList.add('fa-sun');
